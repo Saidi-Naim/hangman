@@ -10,9 +10,12 @@ import bras_gauche from './assets/Arm_left.png';
 import bras_droit from './assets/Arm_right.png';
 import jambe_gauche from './assets/Leg_left.png';
 import jambe_droite from './assets/Leg_right.png';
+import axios from 'axios';
 
 function App() {
-  const words = ['pomme', 'tokyo', 'banane', 'vent', 'soleil', 'celsius', 'sentiment', 'face', 'vogue'];
+  // const randomWord = ['pomme', 'tokyo', 'banane', 'vent', 'soleil', 'celsius', 'sentiment', 'face', 'vogue'];
+
+  const [randomWord, setRandomWord] = useState([]);
 
   const [wordLength, setWordLength] = useState(0);
   const [word, setWord] = useState('');
@@ -20,6 +23,15 @@ function App() {
   const [life, setLife] = useState(10);
   const [randomWordButtonIsActive, setRandomWordButtonIsActive] = useState(false);
 
+  const callApiWord = async () => {
+    const url = 'https://random-word-api.vercel.app/api?words=3';
+    try {
+      const response = await axios.get(url);
+      setRandomWord(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handleClickLetter = (letter) => {
     if (!guessedLetters.includes(letter)) {
       setGuessedLetters([...guessedLetters, letter]);
@@ -28,16 +40,21 @@ function App() {
       }
     }
   };
-
+  console.log(randomWord);
   const chooseRandomWord = () => {
-    const randomIndex = Math.floor(Math.random() * words.length);
-    const randomWord = words[randomIndex];
-    setWord(randomWord);
-    setWordLength(randomWord);
-    setGuessedLetters([]);
-    setLife(10);
-    setRandomWordButtonIsActive(!randomWordButtonIsActive);
+    if (randomWord && randomWord.length > 0) {
+      const randomIndex = Math.floor(Math.random() * randomWord.length);
+      const randomWord2 = randomWord[randomIndex];
+      setWord(randomWord2);
+      setWordLength(randomWord2);
+      setGuessedLetters([]);
+      setLife(10);
+      setRandomWordButtonIsActive(true);
+    }
   };
+  useEffect(() => {
+    callApiWord();
+  }, []);
 
   const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 
@@ -46,50 +63,48 @@ function App() {
   return (
     <>
       <main className='container'>
-        <section className='hangmanContainer' style={{ display: randomWordButtonIsActive ? 'flex' : 'none' }}>
+        <section className='hangmanContainer'>
           <div className='hangman'>
-            <span className={life <= 0 ? 'ten' : null}>{jambe_droite}</span>
-            <span className={life <= 1 ? 'nine' : null}>{jambe_gauche}</span>
-            <span className={life <= 2 ? 'eight' : null}>{bras_droit}</span>
-            <span className={life <= 3 ? 'seven' : null}>{bras_gauche}</span>
-            <span className={life <= 4 ? 'six' : null}>
-              <img src={body} />
-            </span>
-            <span className={life <= 5 ? 'five' : null}>
-              <img src={face} />
-            </span>
-            <span className={life <= 6 ? 'four' : null}>
-              <img src={rond} />
-            </span>
-            <span className={life <= 7 ? 'three' : null}>
-              <img src={corde} />
-            </span>
-            <span className={life <= 8 ? 'two' : null}>
-              <img src={rectangle} />
-            </span>
-            <img className={life <= 9 ? 'one' : null} src={structure} />
+            {life <= 0 ? <img className='ten' src={jambe_droite} /> : null}
+
+            {life <= 1 ? <img className='nine' src={jambe_gauche} /> : null}
+
+            {life <= 2 ? <img className='eight' src={bras_droit} /> : null}
+
+            {life <= 3 ? <img className='seven' src={bras_gauche} /> : null}
+
+            {life <= 4 ? <img className='six' src={body} /> : null}
+
+            {life <= 5 ? <img className='five' src={face} /> : null}
+            {life <= 6 ? <img className='four' src={rond} /> : null}
+            {life <= 7 ? <img className='three' src={corde} /> : null}
+
+            {life <= 8 ? <img className='two' src={rectangle} /> : null}
+
+            {life <= 9 ? <img className='one' src={structure} /> : null}
           </div>
-          <div className='lifeContainer'>
-            <h1 className='life'>{life}</h1>
-          </div>
+          {/* <div className='lifeContainer'>
+            <div style={{ visibility: randomWordButtonIsActive && 'visible' }} className='life'>
+              {life}
+            </div>
+          </div> */}
         </section>
         <section className='letterContainer'>
-          {word && (
-            <div className='randomWord'>
-              {/* <p>Selected Word: {word}</p> */}
-              {word.split('').map((letter, index) => (
+          <div className='randomWord' style={{ visibility: word && 'visible' }}>
+            {/* <p>Selected Word: {word}</p> */}
+            {word.length >= 1 &&
+              word.split('').map((letter, index) => (
                 <span key={index} className='dash'>
                   {guessedLetters.includes(letter) || life === 0 ? letter : '_'}
                 </span>
               ))}
-            </div>
-          )}
+          </div>
           <div className='allLetters'>
             {letters.map((letter, id) => (
               <button
                 style={{
-                  pointerEvents: life === 0 || (guessedLetters.includes(letter) && 'none'),
-                  color: guessedLetters.includes(letter) ? '#767676' : null,
+                  pointerEvents: life === 0 || guessedLetters.includes(letter) || (!randomWordButtonIsActive && 'none'),
+                  color: guessedLetters.includes(letter) || !randomWordButtonIsActive ? '#767676' : null,
                   borderColor: guessedLetters.includes(letter) ? '#767676' : null,
                 }}
                 onClick={() => {
@@ -99,6 +114,10 @@ function App() {
                 key={id}
               >
                 {letter}
+                <span
+                  style={{ display: life === 0 || guessedLetters.includes(letter) || !randomWordButtonIsActive ? 'block' : 'none' }}
+                  className='croix'
+                ></span>
               </button>
             ))}
           </div>
