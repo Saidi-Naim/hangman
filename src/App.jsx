@@ -36,11 +36,13 @@ function App() {
     if (!guessedLetters.includes(letter)) {
       setGuessedLetters([...guessedLetters, letter]);
       if (!word.includes(letter)) {
+        // while (life > 0) {
         setLife((prevLife) => prevLife - 1);
+        // }
       }
     }
   };
-  console.log(randomWord);
+  // console.log(randomWord);
   const chooseRandomWord = () => {
     if (randomWord && randomWord.length > 0) {
       const randomIndex = Math.floor(Math.random() * randomWord.length);
@@ -58,8 +60,8 @@ function App() {
 
   const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 
-  const [gameOver, setGameOver] = useState(false);
-
+  const [gameOver, setGameOver] = useState(life === 0 ? true : false);
+  console.log(word);
   return (
     <>
       <main className='container'>
@@ -83,11 +85,11 @@ function App() {
 
             {life <= 9 ? <img className='one' src={structure} /> : null}
           </div>
-          {/* <div className='lifeContainer'>
+          <div className='lifeContainer'>
             <div style={{ visibility: randomWordButtonIsActive && 'visible' }} className='life'>
               {life}
             </div>
-          </div> */}
+          </div>
         </section>
         <section className='letterContainer'>
           <div className='randomWord' style={{ visibility: word && 'visible' }}>
@@ -103,7 +105,13 @@ function App() {
             {letters.map((letter, id) => (
               <button
                 style={{
-                  pointerEvents: life === 0 || guessedLetters.includes(letter) || (!randomWordButtonIsActive && 'none'),
+                  pointerEvents:
+                    life === 0 ||
+                    guessedLetters.includes(letter) ||
+                    [...word].every((char) => guessedLetters.includes(char)) ||
+                    !randomWordButtonIsActive
+                      ? 'none'
+                      : 'auto',
                   color: guessedLetters.includes(letter) || !randomWordButtonIsActive ? '#767676' : null,
                   borderColor: guessedLetters.includes(letter) ? '#767676' : null,
                 }}
