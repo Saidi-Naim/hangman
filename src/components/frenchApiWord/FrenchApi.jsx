@@ -1,23 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
-import './App.css';
-import structure from './assets/Union.png';
-import rectangle from './assets/Rectangle5.png';
-import corde from './assets/Rope.png';
-import rond from './assets/Exclude.png';
-import face from './assets/Face.png';
-import body from './assets/Body.png';
-import bras_gauche from './assets/Arm_left.png';
-import bras_droit from './assets/Arm_right.png';
-import jambe_gauche from './assets/Leg_left.png';
-import jambe_droite from './assets/Leg_right.png';
+import '../../App.css';
+import structure from '../../assets/Union.png';
+import rectangle from '../../assets/Rectangle5.png';
+import corde from '../../assets/Rope.png';
+import rond from '../../assets/Exclude.png';
+import face from '../../assets/Face.png';
+import body from '../../assets/Body.png';
+import bras_gauche from '../../assets/Arm_left.png';
+import bras_droit from '../../assets/Arm_right.png';
+import jambe_gauche from '../../assets/Leg_left.png';
+import jambe_droite from '../../assets/Leg_right.png';
 import axios from 'axios';
-import FrenchApi from './components/frenchApiWord/FrenchApi';
 
-function App() {
-  // const randomWord = ['pomme', 'tokyo', 'banane', 'vent', 'soleil', 'celsius', 'sentiment', 'face', 'vogue'];
-
-  const [randomWord, setRandomWord] = useState([]);
-
+function FrenchApi() {
+  const [randomWord, setRandomWord] = useState('');
   const [wordLength, setWordLength] = useState(0);
   const [word, setWord] = useState('');
   const [mot, setMot] = useState('');
@@ -26,14 +22,29 @@ function App() {
   const [randomWordButtonIsActive, setRandomWordButtonIsActive] = useState(false);
 
   const callApiWord = async () => {
-    const url = 'https://random-word-api.vercel.app/api?words=3';
+    const requestOptions = {
+      method: 'GET',
+      url: 'https://quotes15.p.rapidapi.com/quotes/random/',
+      params: {
+        language_code: 'fr',
+      },
+      headers: {
+        'X-RapidAPI-Key': 'e8e9de6c84msh1af82a5739cdf3ap1ee09bjsna5ed657c3e5d',
+        'X-RapidAPI-Host': 'quotes15.p.rapidapi.com',
+      },
+    };
+
     try {
-      const response = await axios.get(url);
-      setRandomWord(response.data);
+      const response = await axios.request(requestOptions);
+      const words = response.data.content.split(' ').filter((word) => word.length >= 4);
+      const randomIndex = Math.floor(Math.random() * words.length);
+      const randomWord = words[randomIndex];
+      setRandomWord(randomWord);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
+
   const handleClickLetter = (letter) => {
     if (!guessedLetters.includes(letter)) {
       setGuessedLetters([...guessedLetters, letter]);
@@ -42,35 +53,29 @@ function App() {
       }
     }
   };
+
   const chooseRandomWord = () => {
-    if (randomWord && randomWord.length > 0) {
-      const randomIndex = Math.floor(Math.random() * randomWord.length);
-      const randomWord2 = randomWord[randomIndex];
+    if (randomWord && randomWord.length >= 4) {
+      const words = randomWord.split(' ');
+      const filteredWords = words.filter((word) => word.length >= 4);
+      const randomIndex = Math.floor(Math.random() * filteredWords.length);
+      const randomWord2 = filteredWords[randomIndex];
       setWord(randomWord2);
-      setWordLength(randomWord2);
+      setWordLength(randomWord2.length);
       setGuessedLetters([]);
       setLife(10);
       setRandomWordButtonIsActive(true);
     }
   };
 
-  // Appel de la fonction pour l'exécuter
-
-  // const la = test.split(' ');
-  // console.log(mot.split(' ').filter((mot) => mot.length >= 6));
   useEffect(() => {
     callApiWord();
   }, []);
 
-  useEffect(() => {
-    if (randomWord && randomWord.length > 0) {
-      chooseRandomWord();
-    }
-  }, [randomWord]);
   const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 
   const [gameOver, setGameOver] = useState(life === 0 ? true : false);
-  // console.log(word);
+  //   console.log(word);
 
   return (
     <>
@@ -105,7 +110,7 @@ function App() {
           <div className='randomWord' style={{ visibility: word && 'visible' }}>
             {/* <p>Selected Word: {word}</p> */}
             {word.length >= 1 &&
-              word.split('').map((letter, index) => (
+              [...word].map((letter, index) => (
                 <span key={index} className='dash'>
                   {guessedLetters.includes(letter) || life === 0 ? letter : '_'}
                 </span>
@@ -148,9 +153,8 @@ function App() {
           </button>
         </section>
       </main>
-      {/* <FrenchApi /> */}
     </>
   );
 }
 
-export default App;
+export default FrenchApi;
