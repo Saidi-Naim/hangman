@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect, useRef, useState } from 'react';
 import '../../App.css';
 import structure from '../../assets/Union.png';
 import rectangle from '../../assets/Rectangle5.png';
@@ -11,9 +10,11 @@ import bras_gauche from '../../assets/Arm_left.png';
 import bras_droit from '../../assets/Arm_right.png';
 import jambe_gauche from '../../assets/Leg_left.png';
 import jambe_droite from '../../assets/Leg_right.png';
+import axios from 'axios';
 
-function FrenchApi() {
+function App() {
   const [randomWord, setRandomWord] = useState([]);
+
   const [wordLength, setWordLength] = useState(0);
   const [word, setWord] = useState('');
   const [mot, setMot] = useState('');
@@ -22,29 +23,14 @@ function FrenchApi() {
   const [randomWordButtonIsActive, setRandomWordButtonIsActive] = useState(false);
 
   const callApiWord = async () => {
+    const url = 'https://random-word-api.vercel.app/api?words=3';
     try {
-      const options = {
-        method: 'GET',
-        url: 'https://dicolink.p.rapidapi.com/mots/motauhasard',
-        params: {
-          verbeconjugue: 'false',
-          minlong: '5',
-          maxlong: '-1',
-          avecdef: 'true',
-        },
-        headers: {
-          'X-RapidAPI-Key': 'e8e9de6c84msh1af82a5739cdf3ap1ee09bjsna5ed657c3e5d',
-          'X-RapidAPI-Host': 'dicolink.p.rapidapi.com',
-        },
-      };
-
-      const response = await axios.request(options);
-      setRandomWord(response.data[0].mot);
+      const response = await axios.get(url);
+      setRandomWord(response.data);
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
-
   const handleClickLetter = (letter) => {
     if (!guessedLetters.includes(letter)) {
       setGuessedLetters([...guessedLetters, letter]);
@@ -53,32 +39,36 @@ function FrenchApi() {
       }
     }
   };
-
   const chooseRandomWord = () => {
     if (randomWord && randomWord.length > 0) {
-      setWord(randomWord);
+      const randomIndex = Math.floor(Math.random() * randomWord.length);
+      const randomWord2 = randomWord[randomIndex];
+      setWord(randomWord2);
+      setWordLength(randomWord2);
       setGuessedLetters([]);
       setLife(10);
       setRandomWordButtonIsActive(true);
-      callApiWord();
-      // console.log(randomWord);
+      console.log(word);
     }
   };
+  // console.log('english');
+  // Appel de la fonction pour l'exécuter
 
+  // const la = test.split(' ');
+  // console.log(mot.split(' ').filter((mot) => mot.length >= 6));
   useEffect(() => {
     callApiWord();
+  }, []);
+
+  useEffect(() => {
+    if (randomWord && randomWord.length > 0) {
+      chooseRandomWord();
+    }
   }, [randomWord]);
-
-  // useEffect(() => {
-  //   if (randomWord && randomWord.length > 0) {
-  //     chooseRandomWord();
-  //   }
-  // }, [randomWord]);
-
-  const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x'];
+  const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 
   const [gameOver, setGameOver] = useState(life === 0 ? true : false);
-  // console.log(randomWord);
+  // console.log(word);
 
   return (
     <>
@@ -161,4 +151,4 @@ function FrenchApi() {
   );
 }
 
-export default FrenchApi;
+export default App;
