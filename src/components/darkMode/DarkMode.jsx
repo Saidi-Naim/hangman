@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DarkMode = () => {
+const DarkMode = (props) => {
   return <div>DarkMode</div>;
 };
 

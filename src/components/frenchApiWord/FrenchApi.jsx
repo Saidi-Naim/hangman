@@ -20,6 +20,7 @@ function FrenchApi() {
   const [guessedLetters, setGuessedLetters] = useState([]);
   const [life, setLife] = useState(10);
   const [randomWordButtonIsActive, setRandomWordButtonIsActive] = useState(false);
+  const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x'];
 
   const callApiWord = async () => {
     try {
@@ -61,13 +62,12 @@ function FrenchApi() {
       setLife(10);
       setRandomWordButtonIsActive(true);
       callApiWord();
-      // console.log(randomWord);
     }
   };
 
   useEffect(() => {
     callApiWord();
-  }, [randomWord]);
+  }, []);
 
   // useEffect(() => {
   //   if (randomWord && randomWord.length > 0) {
@@ -75,14 +75,14 @@ function FrenchApi() {
   //   }
   // }, [randomWord]);
 
-  const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x'];
-
-  const [gameOver, setGameOver] = useState(life === 0 ? true : false);
-  // console.log(randomWord);
+  const handleGoBack = () => {
+    window.history.back();
+  };
 
   return (
     <>
       <main className='container'>
+        {/* <button onClick={handleGoBack}>Back</button> */}
         <section className='hangmanContainer'>
           <div className='hangman'>
             {life <= 0 ? <img className='ten' src={jambe_droite} /> : null}

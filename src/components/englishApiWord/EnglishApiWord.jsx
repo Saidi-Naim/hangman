@@ -51,11 +51,6 @@ function App() {
       console.log(word);
     }
   };
-  // console.log('english');
-  // Appel de la fonction pour l'exécuter
-
-  // const la = test.split(' ');
-  // console.log(mot.split(' ').filter((mot) => mot.length >= 6));
   useEffect(() => {
     callApiWord();
   }, []);
@@ -68,30 +63,29 @@ function App() {
   const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 
   const [gameOver, setGameOver] = useState(life === 0 ? true : false);
-  // console.log(word);
 
   return (
     <>
       <main className='container'>
         <section className='hangmanContainer'>
           <div className='hangman'>
-            {life <= 0 ? <img className='ten' src={jambe_droite} /> : null}
+            {life <= 0 ? <img className='ten' src={jambe_droite} /> : <img className='ten' src={jambe_droite} />}
 
-            {life <= 1 ? <img className='nine' src={jambe_gauche} /> : null}
+            {life <= 1 ? <img className='nine' src={jambe_gauche} /> : <img className='nine' src={jambe_gauche} />}
 
-            {life <= 2 ? <img className='eight' src={bras_droit} /> : null}
+            {life <= 2 ? <img className='eight' src={bras_droit} /> : <img className='eight' src={bras_droit} />}
 
-            {life <= 3 ? <img className='seven' src={bras_gauche} /> : null}
+            {life <= 3 ? <img className='seven' src={bras_gauche} /> : <img className='seven' src={bras_gauche} />}
 
-            {life <= 4 ? <img className='six' src={body} /> : null}
+            {life <= 4 ? <img className='six' src={body} /> : <img className='six' src={body} />}
 
-            {life <= 5 ? <img className='five' src={face} /> : null}
-            {life <= 6 ? <img className='four' src={rond} /> : null}
-            {life <= 7 ? <img className='three' src={corde} /> : null}
+            {life <= 5 ? <img className='five' src={face} /> : <img className='five' src={face} />}
+            {life <= 6 ? <img className='four' src={rond} /> : <img className='four' src={rond} />}
+            {life <= 7 ? <img className='three' src={corde} /> : <img className='three' src={corde} />}
 
-            {life <= 8 ? <img className='two' src={rectangle} /> : null}
+            {life <= 8 ? <img className='two' src={rectangle} /> : <img className='two' src={rectangle} />}
 
-            {life <= 9 ? <img className='one' src={structure} /> : null}
+            {life <= 9 ? <img className='one' src={structure} /> : <img className='one' src={structure} />}
           </div>
           <div className='lifeContainer'>
             <div style={{ visibility: randomWordButtonIsActive && 'visible' }} className='life'>
