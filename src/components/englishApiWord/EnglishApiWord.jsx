@@ -11,8 +11,12 @@ import bras_droit from '../../assets/Arm_right.png';
 import jambe_gauche from '../../assets/Leg_left.png';
 import jambe_droite from '../../assets/Leg_right.png';
 import axios from 'axios';
+import { FaHeart, FaHeartBroken } from 'react-icons/fa';
+import EndGame from '../endGame/EndGame';
+import OverGame from '../endGame/OverGame';
+import '../frenchApiWord/GameStyle.css';
 
-function App() {
+function EnglishApiWord({ englishWord, text, click }) {
   const [randomWord, setRandomWord] = useState([]);
 
   const [wordLength, setWordLength] = useState(0);
@@ -21,6 +25,9 @@ function App() {
   const [guessedLetters, setGuessedLetters] = useState([]);
   const [life, setLife] = useState(10);
   const [randomWordButtonIsActive, setRandomWordButtonIsActive] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
+  const [gameWin, setGameWin] = useState(false);
+  const [correctLetter, setCorrectLetter] = useState([]);
 
   const callApiWord = async () => {
     const url = 'https://random-word-api.vercel.app/api?words=3';
@@ -46,9 +53,9 @@ function App() {
       setWord(randomWord2);
       setWordLength(randomWord2);
       setGuessedLetters([]);
+      setCorrectLetter([...word]);
       setLife(10);
       setRandomWordButtonIsActive(true);
-      console.log(word);
     }
   };
   useEffect(() => {
@@ -61,40 +68,74 @@ function App() {
     }
   }, [randomWord]);
   const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+  const newGame = () => {
+    chooseRandomWord();
+  };
+  useEffect(() => {
+    if (life === 0) {
+      setGameWin(false);
+    }
+  }, [life]);
 
-  const [gameOver, setGameOver] = useState(life === 0 ? true : false);
+  useEffect(() => {
+    if (word) {
+      const wordLetters = word.split('');
+      const isWordGuessed = wordLetters.every((letter) => guessedLetters.includes(letter));
+
+      setGameWin(isWordGuessed && life > 0);
+    }
+  }, [guessedLetters, life, word]);
+
+  console.log(gameWin, word);
 
   return (
     <>
-      <main className='container'>
-        <section className='hangmanContainer'>
-          <div className='hangman'>
-            {life <= 0 ? <img className='ten' src={jambe_droite} /> : <img className='ten' src={jambe_droite} />}
+      {gameWin && life > 0 ? (
+        <EndGame
+          gameWin={gameWin}
+          life={life}
+          text={englishWord ? 'Retry' : 'Réessayer'}
+          click={newGame}
+          word={word}
+          titleEndGame={'You Win'}
+          guessedLetters={guessedLetters}
+        />
+      ) : null}
+      {!gameWin && life === 0 ? <OverGame text={englishWord ? 'Retry' : 'Réessayer'} click={newGame} word={word} /> : null}
 
-            {life <= 1 ? <img className='nine' src={jambe_gauche} /> : <img className='nine' src={jambe_gauche} />}
+      <main className='containerMain'>
+        <section className='hangmanContainerr'>
+          <div className='hangmann'>
+            {life <= 0 ? <img className='ten' src={jambe_droite} /> : null}
 
-            {life <= 2 ? <img className='eight' src={bras_droit} /> : <img className='eight' src={bras_droit} />}
+            {life <= 1 ? <img className='nine' src={jambe_gauche} /> : null}
 
-            {life <= 3 ? <img className='seven' src={bras_gauche} /> : <img className='seven' src={bras_gauche} />}
+            {life <= 2 ? <img className='eight' src={bras_droit} /> : null}
 
-            {life <= 4 ? <img className='six' src={body} /> : <img className='six' src={body} />}
+            {life <= 3 ? <img className='seven' src={bras_gauche} /> : null}
 
-            {life <= 5 ? <img className='five' src={face} /> : <img className='five' src={face} />}
-            {life <= 6 ? <img className='four' src={rond} /> : <img className='four' src={rond} />}
-            {life <= 7 ? <img className='three' src={corde} /> : <img className='three' src={corde} />}
+            {life <= 4 ? <img className='six' src={body} /> : null}
 
-            {life <= 8 ? <img className='two' src={rectangle} /> : <img className='two' src={rectangle} />}
+            {life <= 5 ? <img className='five' src={face} /> : null}
+            {life <= 6 ? <img className='four' src={rond} /> : null}
+            {life <= 7 ? <img className='three' src={corde} /> : null}
 
-            {life <= 9 ? <img className='one' src={structure} /> : <img className='one' src={structure} />}
+            {life <= 8 ? <img className='two' src={rectangle} /> : null}
+
+            {life <= 9 ? <img className='one' src={structure} /> : null}
           </div>
           <div className='lifeContainer'>
             <div style={{ visibility: randomWordButtonIsActive && 'visible' }} className='life'>
-              {life}
+              {Array.from({ length: 10 }, (_, index) => (
+                <span key={index} className='heart'>
+                  {index < life ? <FaHeart /> : <FaHeartBroken />}
+                </span>
+              ))}
             </div>
           </div>
         </section>
-        <section className='letterContainer'>
-          <div className='randomWord' style={{ visibility: word && 'visible' }}>
+        <section className='letterContainerr'>
+          <div className='randomWordd' style={{ visibility: word && 'visible' }}>
             {/* <p>Selected Word: {word}</p> */}
             {word.length >= 1 &&
               word.split('').map((letter, index) => (
@@ -103,7 +144,7 @@ function App() {
                 </span>
               ))}
           </div>
-          <div className='allLetters'>
+          <div className='allLetterss'>
             {letters.map((letter, id) => (
               <button
                 style={{
@@ -135,9 +176,9 @@ function App() {
               </button>
             ))}
           </div>
-          <button className='randomWordButton' onClick={chooseRandomWord}>
+          {/* <button className='randomWordButtonn' onClick={chooseRandomWord}>
             Choose Random Word
-          </button>
+          </button> */}
         </section>
       </main>
       {/* <FrenchApi /> */}
@@ -145,4 +186,4 @@ function App() {
   );
 }
 
-export default App;
+export default EnglishApiWord;

@@ -1,0 +1,59 @@
+.containerEndGame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.titleEndGame {
+  color: #3f51b5;
+  font-family: 'Roboto', sans-serif;
+  font-size: 7rem;
+  text-align: center;
+  font-style: normal;
+  font-weight: 900;
+  line-height: normal;
+  letter-spacing: 14.4px;
+  text-shadow: 2px 2px 5px #000;
+  width: 100%;
+}
+.containerEndGame button {
+  width: 40%;
+  height: 10%;
+  background-color: #e7ad01ac;
+  font-size: large;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 40px;
+  margin: 20px 0 80px 0;
+  transition: all 0.2s ease-in-out;
+  border: none;
+  color: #0b0a0a;
+  font-weight: 800;
+  box-shadow: 2px 2px 2px #000;
+  /* color: #6a1b9a; */
+
+  &:hover {
+    background-color: #ffbe01;
+  }
+}
+.containerEndGame p {
+  display: flex;
+  height: 10%;
+  flex-direction: column;
+  font-weight: 600;
+  font-size: large;
+}
+.containerEndGame p span {
+  color: #ffbe01;
+  font-size: 40px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 800;
+  letter-spacing: 5px;
+}

@@ -11,41 +11,46 @@ import bras_gauche from '../../assets/Arm_left.png';
 import bras_droit from '../../assets/Arm_right.png';
 import jambe_gauche from '../../assets/Leg_left.png';
 import jambe_droite from '../../assets/Leg_right.png';
+import { FaHeart, FaHeartBroken } from 'react-icons/fa';
+import EndGame from '../endGame/EndGame';
+import OverGame from '../endGame/OverGame';
+import './GameStyle.css';
 
-function FrenchApi() {
+function FrenchApi({ englishWord, text, click }) {
   const [randomWord, setRandomWord] = useState([]);
+
   const [wordLength, setWordLength] = useState(0);
   const [word, setWord] = useState('');
   const [mot, setMot] = useState('');
   const [guessedLetters, setGuessedLetters] = useState([]);
   const [life, setLife] = useState(10);
   const [randomWordButtonIsActive, setRandomWordButtonIsActive] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
+  const [gameWin, setGameWin] = useState(false);
+  const [correctLetter, setCorrectLetter] = useState([]);
+
   const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x'];
 
   const callApiWord = async () => {
     try {
       const options = {
         method: 'GET',
-        url: 'https://dicolink.p.rapidapi.com/mots/motauhasard',
+        url: 'https://quotes15.p.rapidapi.com/quotes/random/',
         params: {
-          verbeconjugue: 'false',
-          minlong: '5',
-          maxlong: '-1',
-          avecdef: 'true',
+          language_code: 'fr',
         },
         headers: {
-          'X-RapidAPI-Key': 'e8e9de6c84msh1af82a5739cdf3ap1ee09bjsna5ed657c3e5d',
-          'X-RapidAPI-Host': 'dicolink.p.rapidapi.com',
+          'X-RapidAPI-Key': '539331846fmshf00279114075e8dp15ef1bjsnbcaa50a400d7',
+          'X-RapidAPI-Host': 'quotes15.p.rapidapi.com',
         },
       };
 
       const response = await axios.request(options);
-      setRandomWord(response.data[0].mot);
+      setRandomWord(response.data.tags.filter((word) => /^[a-zA-Z]+$/.test(word)));
     } catch (error) {
       console.error(error);
     }
   };
-
   const handleClickLetter = (letter) => {
     if (!guessedLetters.includes(letter)) {
       setGuessedLetters([...guessedLetters, letter]);
@@ -57,11 +62,14 @@ function FrenchApi() {
 
   const chooseRandomWord = () => {
     if (randomWord && randomWord.length > 0) {
-      setWord(randomWord);
+      const randomIndex = Math.floor(Math.random() * randomWord.length);
+      const randomWord2 = randomWord[randomIndex];
+      setWord(randomWord2);
+      setWordLength(randomWord2);
       setGuessedLetters([]);
+      setCorrectLetter([...word]);
       setLife(10);
       setRandomWordButtonIsActive(true);
-      callApiWord();
     }
   };
 
@@ -69,22 +77,47 @@ function FrenchApi() {
     callApiWord();
   }, []);
 
-  // useEffect(() => {
-  //   if (randomWord && randomWord.length > 0) {
-  //     chooseRandomWord();
-  //   }
-  // }, [randomWord]);
+  useEffect(() => {
+    chooseRandomWord();
+  }, [randomWord]);
 
-  const handleGoBack = () => {
-    window.history.back();
+  useEffect(() => {
+    if (life === 0) {
+      setGameWin(false);
+    }
+  }, [life]);
+
+  const newGame = () => {
+    chooseRandomWord();
   };
+
+  useEffect(() => {
+    if (word) {
+      const wordLetters = word.split('');
+      const isWordGuessed = wordLetters.every((letter) => guessedLetters.includes(letter));
+
+      setGameWin(isWordGuessed && life > 0);
+    }
+  }, [guessedLetters, life, word]);
 
   return (
     <>
-      <main className='container'>
+      {gameWin && life > 0 ? (
+        <EndGame
+          gameWin={gameWin}
+          life={life}
+          text={englishWord ? 'Retry' : 'Réessayer'}
+          click={newGame}
+          word={word}
+          titleEndGame={'You Win'}
+          guessedLetters={guessedLetters}
+        />
+      ) : null}
+      {!gameWin && life === 0 ? <OverGame text={englishWord ? 'Retry' : 'Réessayer'} click={newGame} word={word} /> : null}
+      <main className='containerMain'>
         {/* <button onClick={handleGoBack}>Back</button> */}
-        <section className='hangmanContainer'>
-          <div className='hangman'>
+        <section className='hangmanContainerr'>
+          <div className='hangmann'>
             {life <= 0 ? <img className='ten' src={jambe_droite} /> : null}
 
             {life <= 1 ? <img className='nine' src={jambe_gauche} /> : null}
@@ -105,12 +138,16 @@ function FrenchApi() {
           </div>
           <div className='lifeContainer'>
             <div style={{ visibility: randomWordButtonIsActive && 'visible' }} className='life'>
-              {life}
+              {Array.from({ length: 10 }, (_, index) => (
+                <span key={index} className='heart'>
+                  {index < life ? <FaHeart /> : <FaHeartBroken />}
+                </span>
+              ))}
             </div>
           </div>
         </section>
-        <section className='letterContainer'>
-          <div className='randomWord' style={{ visibility: word && 'visible' }}>
+        <section className='letterContainerr'>
+          <div className='randomWordd' style={{ visibility: word && 'visible' }}>
             {/* <p>Selected Word: {word}</p> */}
             {word.length >= 1 &&
               word.split('').map((letter, index) => (
@@ -119,7 +156,7 @@ function FrenchApi() {
                 </span>
               ))}
           </div>
-          <div className='allLetters'>
+          <div className='allLetterss'>
             {letters.map((letter, id) => (
               <button
                 style={{
@@ -151,9 +188,9 @@ function FrenchApi() {
               </button>
             ))}
           </div>
-          <button className='randomWordButton' onClick={chooseRandomWord}>
+          {/* <button className='randomWordButtonn' onClick={chooseRandomWord}>
             Choose Random Word
-          </button>
+          </button> */}
         </section>
       </main>
       {/* <FrenchApi /> */}
