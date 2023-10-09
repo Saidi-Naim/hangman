@@ -1,12 +1,13 @@
 import React from 'react';
 import '../endGame/EndGameStyle.css';
 
-const OverGame = ({ text, click, word }) => {
+const OverGame = ({ text, click, word, englishWord }) => {
+  console.log(englishWord);
   return (
     <div className='containerEndGame'>
       <h1 className='titleEndGame'>Game Over</h1>
       <p>
-        The Word is: <span>{word}</span>
+        {englishWord ? 'The word is: ' : 'Le mot est: '} <span>{word}</span>
       </p>
       <button onClick={click}>{text}</button>
     </div>

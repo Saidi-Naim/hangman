@@ -7,20 +7,30 @@ import axios from 'axios';
 import HomePage from './components/homePage/HomePage';
 
 function App() {
+  const [isHomePage, setIsHomePage] = useState(true);
   const [frenchWord, setFrenchWord] = useState(false);
   const [englishWord, setEnglishWord] = useState(false);
 
   const frenchWords = () => {
     setFrenchWord(true);
+    setIsHomePage(false);
   };
   const englishWords = () => {
     setEnglishWord(true);
+    setIsHomePage(false);
   };
 
   return (
     <>
-      {/* <NavBar /> */}
-      <HomePage frenchWord={frenchWord} englishWord={englishWord} frenchWords={frenchWords} englishWords={englishWords} />
+      {isHomePage ? (
+        <HomePage frenchWords={frenchWords} englishWords={englishWords} />
+      ) : (
+        <>
+          {/* <NavBar /> */}
+          {frenchWord ? <FrenchApi englishWord={englishWord} /> : null}
+          {englishWord ? <EnglishApi englishWord={englishWord} /> : null}
+        </>
+      )}
     </>
   );
 }

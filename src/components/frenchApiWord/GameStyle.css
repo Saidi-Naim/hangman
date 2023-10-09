@@ -16,7 +16,7 @@
   justify-content: center;
   width: 100%;
   height: 100%;
-  left: 0;
+  left: 10%;
   top: 10%;
   position: absolute;
 }
@@ -97,8 +97,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 70%;
-  gap: 20px;
+  height: 100%;
+  gap: 10px;
   overflow: hidden;
 }
 
@@ -198,9 +198,13 @@
     overflow: hidden;
   }
   .allLetterss {
-    width: 80%;
+    width: 85%;
   }
-
+  .letterContainerr {
+    justify-content: end;
+    padding-bottom: 20%;
+    gap: 30px;
+  }
   .randomWordButtonn {
     height: 10%;
   }
@@ -208,7 +212,7 @@
     height: 40%;
   }
   .hangmann {
-    top: 20%;
+    top: 0%;
   }
   .dash {
     letter-spacing: 28px;

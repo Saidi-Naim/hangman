@@ -29,7 +29,7 @@ function FrenchApi({ englishWord, text, click }) {
   const [gameWin, setGameWin] = useState(false);
   const [correctLetter, setCorrectLetter] = useState([]);
 
-  const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x'];
+  const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 
   const callApiWord = async () => {
     try {
@@ -89,6 +89,7 @@ function FrenchApi({ englishWord, text, click }) {
 
   const newGame = () => {
     chooseRandomWord();
+    callApiWord();
   };
 
   useEffect(() => {
@@ -111,9 +112,10 @@ function FrenchApi({ englishWord, text, click }) {
           word={word}
           titleEndGame={'You Win'}
           guessedLetters={guessedLetters}
+          englishWord={englishWord}
         />
       ) : null}
-      {!gameWin && life === 0 ? <OverGame text={englishWord ? 'Retry' : 'Réessayer'} click={newGame} word={word} /> : null}
+      {!gameWin && life === 0 ? <OverGame englishWord={englishWord} text={englishWord ? 'Retry' : 'Réessayer'} click={newGame} word={word} /> : null}
       <main className='containerMain'>
         {/* <button onClick={handleGoBack}>Back</button> */}
         <section className='hangmanContainerr'>

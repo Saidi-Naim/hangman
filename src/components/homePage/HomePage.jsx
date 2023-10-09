@@ -1,6 +1,8 @@
 import React from 'react';
 import './HomePageStyle.css';
 import hangManImg from '../../assets/hangmanHome.png';
+import FrenchApi from '../frenchApiWord/FrenchApi';
+import EnglishApiWord from '../englishApiWord/EnglishApiWord';
 
 const HomePage = ({ englishWord, frenchWord, englishWords, frenchWords }) => {
   return (
@@ -15,11 +17,11 @@ const HomePage = ({ englishWord, frenchWord, englishWords, frenchWords }) => {
             <button style={{ display: frenchWord || englishWord ? 'none' : 'block' }} className='buttonLanguage' onClick={frenchWords}>
               Français
             </button>
-            {frenchWord ? <FrenchApi englishWord={englishWord} /> : null}
+            {frenchWord ? <FrenchApi frenchWord={frenchWord} englishWord={englishWord} /> : null}
             <button style={{ display: frenchWord || englishWord ? 'none' : 'block' }} className='buttonLanguage' onClick={englishWords}>
               English
             </button>
-            {englishWord ? <EnglishApi englishWord={englishWord} /> : null}
+            {englishWord ? <EnglishApiWord englishWord={englishWord} /> : null}
           </div>
         </div>
         <div className='containerImgHomePage'>

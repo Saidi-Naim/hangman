@@ -68,8 +68,10 @@ function EnglishApiWord({ englishWord, text, click }) {
     }
   }, [randomWord]);
   const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+
   const newGame = () => {
     chooseRandomWord();
+    callApiWord();
   };
   useEffect(() => {
     if (life === 0) {
@@ -86,8 +88,6 @@ function EnglishApiWord({ englishWord, text, click }) {
     }
   }, [guessedLetters, life, word]);
 
-  console.log(gameWin, word);
-
   return (
     <>
       {gameWin && life > 0 ? (
@@ -99,9 +99,10 @@ function EnglishApiWord({ englishWord, text, click }) {
           word={word}
           titleEndGame={'You Win'}
           guessedLetters={guessedLetters}
+          englishWord={englishWord}
         />
       ) : null}
-      {!gameWin && life === 0 ? <OverGame text={englishWord ? 'Retry' : 'Réessayer'} click={newGame} word={word} /> : null}
+      {!gameWin && life === 0 ? <OverGame englishWord={englishWord} text={englishWord ? 'Retry' : 'Réessayer'} click={newGame} word={word} /> : null}
 
       <main className='containerMain'>
         <section className='hangmanContainerr'>
