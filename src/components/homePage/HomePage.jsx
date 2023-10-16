@@ -8,6 +8,9 @@ const HomePage = ({ englishWord, frenchWord, englishWords, frenchWords }) => {
   return (
     <>
       <div className='containerHome'>
+        <div className='containerImgHomePage'>
+          <img className='hangmanImg' src={hangManImg} alt='hangman Image' />
+        </div>
         <div className='contentHome'>
           <div className='containerTitleHome'>
             <span className='first'>The</span>
@@ -23,9 +26,6 @@ const HomePage = ({ englishWord, frenchWord, englishWords, frenchWords }) => {
             </button>
             {englishWord ? <EnglishApiWord englishWord={englishWord} /> : null}
           </div>
-        </div>
-        <div className='containerImgHomePage'>
-          <img className='hangmanImg' src={hangManImg} alt='hangman Image' />
         </div>
       </div>
     </>
