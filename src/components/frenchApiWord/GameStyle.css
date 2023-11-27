@@ -114,10 +114,10 @@
 .croix {
   position: absolute;
   width: 4px;
-  height: rem;
+  height: 3rem;
   border-radius: 10px;
   transform: rotate(45deg);
-  z-index: 4;
+  z-index: 5;
   background-color: #0b0a0a;
   display: none;
 }
@@ -125,7 +125,8 @@
   content: '';
   position: absolute;
   width: 4px;
-  height: 2rem;
+  height: 3rem;
+  z-index: 5;
   top: 0;
   left: 0;
   border-radius: 10px;
@@ -161,6 +162,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 
   &:hover {
     background-color: #ffbe01;
